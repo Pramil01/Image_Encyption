@@ -4,7 +4,7 @@ def logistic_map(x,r):
     sub_array = np.zeros(256,dtype=int)
     for i in range(256):
         x = r * x * (1 - x)
-        sub_array[i] = (x*255) % 256
+        sub_array[i] = int(x * 255)
     return sub_array
 
 def inverse(arr):
@@ -20,10 +20,12 @@ def substitution_array_generation():
     for i in range(256):
         if check[sub_array[i]] == False:
             check[sub_array[i]] = True
+            while(least_free_val != 256 and check[least_free_val] == True):
+                least_free_val = least_free_val + 1
         else:
             sub_array[i] = least_free_val
             check[least_free_val] = True
-            while(check[least_free_val]):
+            while(least_free_val != 256 and check[least_free_val] == True):
                 least_free_val = least_free_val + 1
     sub_array = inverse(sub_array)
     return sub_array
@@ -56,12 +58,11 @@ def col_permutation(image_array,sub_array):
 
 def snp_decryption(image_array,N):
     sub_array = substitution_array_generation()
-    print(sub_array)
     for i in range(N):
         col_permutation(image_array,sub_array)
         row_permutation(image_array,sub_array)
     print(image_array)
 
-test = [[104, 129, 217], [90, 5, 243], [13, 2, 56]]
+test = [[104, 160, 149], [124, 40, 243], [242, 42, 58]]
 
-snp_decryption(test,1)
+snp_decryption(test,2)
