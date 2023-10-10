@@ -14,10 +14,8 @@ normalized_image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX)
 # Convert to a NumPy arrayv
 pixel_values = np.array(normalized_image, dtype=np.uint8)
 
-
-mask = Henon_Map.export_mask(0.001,0.2,128)
-
-def encrypt(image,mask):
+def encrypt(image,x,y):
+    mask = Henon_Map.export_mask(x,y,128)
     en_img = np.bitwise_xor(image,mask)
     return en_img
 
@@ -35,8 +33,8 @@ def display_image_from_array(pixel_values,title):
     # Show the image (optional)
     cv2.imshow(title, img)
 
-encrypt_img = encrypt(normalized_image,mask)
-decrypt_img = decrypt(encrypt_img,0.001,0.2)
+encrypt_img = encrypt(normalized_image,0.001,0.2)
+decrypt_img = decrypt(encrypt_img,0.001,0.3)
 display_image_from_array(encrypt_img,"encrypted Image")
 display_image_from_array(decrypt_img,"decrypted Image")
 
