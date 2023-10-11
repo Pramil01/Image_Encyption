@@ -10,17 +10,17 @@ def logistic_map(x,r):
 def substitution_array_generation():
     sub_array = logistic_map(0.01,3.95)
     check = [False] * 256
-    least_free_val = 0
+    most_free_val = 255
     for i in range(256):
         if check[sub_array[i]] == False:
             check[sub_array[i]] = True
-            while(least_free_val != 256 and check[least_free_val] == True):
-                least_free_val = least_free_val + 1
+            while(most_free_val != -1 and check[most_free_val] == True):
+                most_free_val = most_free_val - 1
         else:
-            sub_array[i] = least_free_val
-            check[least_free_val] = True
-            while(least_free_val != 256 and check[least_free_val] == True):
-                least_free_val = least_free_val + 1
+            sub_array[i] = most_free_val
+            check[most_free_val] = True
+            while(most_free_val != -1 and check[most_free_val] == True):
+                most_free_val = most_free_val - 1
     return sub_array
 
 def row_permutation(image_array,sub_array):
@@ -53,8 +53,4 @@ def snp_encryption(image_array,N):
     for i in range(N):
         row_permutation(image_array,sub_array)
         col_permutation(image_array,sub_array)
-    print(image_array)
 
-test = [[1,2,3],[4,5,6],[7,8,9]]
-
-snp_encryption(test,2)

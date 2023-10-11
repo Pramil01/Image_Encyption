@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import Henon_Map
+import snp_en
+import snp_de
 
 # Load the grayscale image
 image = cv2.imread('Lena_128.jpg', cv2.IMREAD_GRAYSCALE)
@@ -19,6 +21,19 @@ def encrypt(image,x,y):
     en_img = np.bitwise_xor(image,mask)
     return en_img
 
+
+def encrypt_snp(image,x,y,N):
+    mask = Henon_Map.export_mask(x,y,128)
+    snp_en.snp_encryption(image,N)
+    en_img = np.bitwise_xor(image,mask)
+    return en_img
+
+def decrypt_snp(image,x,y,N):
+    mask = Henon_Map.export_mask(x,y,128)
+    de_img = np.bitwise_xor(image,mask)
+    snp_de.snp_decryption(de_img,N)
+    return de_img
+
 def decrypt(image,x,y):
     mask = Henon_Map.export_mask(x,y,128)
     de_img = np.bitwise_xor(image,mask)
@@ -34,8 +49,12 @@ def display_image_from_array(pixel_values,title):
     cv2.imshow(title, img)
 
 encrypt_img = encrypt(normalized_image,0.001,0.2)
-decrypt_img = decrypt(encrypt_img,0.001,0.3)
+decrypt_img = decrypt(encrypt_img,0.001,0.2)
+encrypt_img_snp = encrypt_snp(normalized_image,0.001,0.2,1)
+decrypt_img_snp = decrypt_snp(encrypt_img_snp,0.001,0.2,1)
 display_image_from_array(encrypt_img,"encrypted Image")
 display_image_from_array(decrypt_img,"decrypted Image")
+display_image_from_array(encrypt_img_snp,"encrypted SNP Image")
+display_image_from_array(decrypt_img_snp,"decrypted SNP Image")
 
 cv2.waitKey(0)
