@@ -17,26 +17,26 @@ normalized_image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX)
 pixel_values = np.array(normalized_image, dtype=np.uint8)
 
 def encrypt(image,x,y):
-    mask = Henon_Map.export_mask(x,y,128)
-    en_img = np.bitwise_xor(image,mask)
+    key = Henon_Map.export_mask(x,y,128)
+    en_img = np.bitwise_xor(image,key)
     return en_img
 
 
 def encrypt_snp(image,x,y,N):
-    mask = Henon_Map.export_mask(x,y,128)
+    key = Henon_Map.export_mask(x,y,128)
     snp_en.snp_encryption(image,N)
-    en_img = np.bitwise_xor(image,mask)
+    en_img = np.bitwise_xor(image,key)
     return en_img
 
 def decrypt_snp(image,x,y,N):
-    mask = Henon_Map.export_mask(x,y,128)
-    de_img = np.bitwise_xor(image,mask)
+    key = Henon_Map.export_mask(x,y,128)
+    de_img = np.bitwise_xor(image,key)
     snp_de.snp_decryption(de_img,N)
     return de_img
 
 def decrypt(image,x,y):
-    mask = Henon_Map.export_mask(x,y,128)
-    de_img = np.bitwise_xor(image,mask)
+    key = Henon_Map.export_mask(x,y,128)
+    de_img = np.bitwise_xor(image,key)
     return de_img
 
 def display_image_from_array(pixel_values,title):
@@ -50,8 +50,8 @@ def display_image_from_array(pixel_values,title):
 
 encrypt_img = encrypt(normalized_image,0.001,0.2)
 decrypt_img = decrypt(encrypt_img,0.001,0.2)
-encrypt_img_snp = encrypt_snp(normalized_image,0.001,0.2,1)
-decrypt_img_snp = decrypt_snp(encrypt_img_snp,0.001,0.2,1)
+encrypt_img_snp = encrypt_snp(normalized_image,0.001,0.2,5)
+decrypt_img_snp = decrypt_snp(encrypt_img_snp,0.001,0.2,5)
 display_image_from_array(encrypt_img,"encrypted Image")
 display_image_from_array(decrypt_img,"decrypted Image")
 display_image_from_array(encrypt_img_snp,"encrypted SNP Image")
