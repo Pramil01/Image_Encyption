@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 def pixel_difference(original_img,decrypted_img):
    
     # Check if the images have the same dimensions

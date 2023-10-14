@@ -5,6 +5,8 @@ import snp_en
 import snp_de
 import pixel_diff
 import psnr
+import npcr_parameter
+
 # Load the grayscale image
 image = cv2.imread('Lena_128.jpg', cv2.IMREAD_GRAYSCALE)
 img_size = len(image)
@@ -59,10 +61,11 @@ def display_images():
     display_image_from_array(decrypt_img_snp,"decrypted SNP Image")
 
 # display_images()
-diff = pixel_diff.pixel_difference(pixel_values,decrypt_img_snp)
-pixel_diff.display_image_from_array(diff,'Difference Image')
-
-psnr_value = psnr.calculate_psnr(pixel_values,decrypt_img_snp)
-print (psnr_value)
+# diff = pixel_diff.pixel_difference(pixel_values,decrypt_img_snp)
+# pixel_diff.display_image_from_array(diff,'Difference Image')
+#
+# psnr_value = psnr.calculate_psnr(pixel_values,decrypt_img_snp)
+# print (psnr_value)
+print(npcr_parameter.npcr(encrypt_img_snp,decrypt_img_snp ))
 # print(f"PSNR: {psnr_value:.2f} dB")
 cv2.waitKey(0)
