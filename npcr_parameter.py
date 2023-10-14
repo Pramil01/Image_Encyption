@@ -1,5 +1,7 @@
 import numpy as np
 
+# NPCR(Number of Pixel Change Rate) determines the number of pixels whose
+# values have changed in both the cipher images in the same position.
 
 def sumofpixelval (height, width, img1, img2):
     matrix = np.empty([width, height])
