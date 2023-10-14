@@ -3,36 +3,37 @@ import numpy as np
 import Henon_Map
 import snp_en
 import snp_de
-
+import pixel_diff
+import psnr
 # Load the grayscale image
 image = cv2.imread('Lena_128.jpg', cv2.IMREAD_GRAYSCALE)
-  
+img_size = len(image)
 # Normalize pixel values to the range 0-255
 normalized_image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX)
 
 # Convert to a NumPy arrayv
-pixel_values = np.array(normalized_image, dtype=np.uint8)
+pixel_values = np.array(normalized_image, dtype=np.uint8).astype('int32')
 
 def encrypt(image,x,y):
-    key = Henon_Map.export_mask(x,y,128)
+    key = Henon_Map.export_mask(x,y,img_size)
     en_img = np.bitwise_xor(image,key)
     return en_img
 
 
 def encrypt_snp(image,x,y,N):
-    key = Henon_Map.export_mask(x,y,128)
+    key = Henon_Map.export_mask(x,y,img_size)
     snp_en.snp_encryption(image,N)
     en_img = np.bitwise_xor(image,key)
     return en_img
 
 def decrypt_snp(image,x,y,N):
-    key = Henon_Map.export_mask(x,y,128)
+    key = Henon_Map.export_mask(x,y,img_size)
     de_img = np.bitwise_xor(image,key)
     snp_de.snp_decryption(de_img,N)
     return de_img
 
 def decrypt(image,x,y):
-    key = Henon_Map.export_mask(x,y,128)
+    key = Henon_Map.export_mask(x,y,img_size)
     de_img = np.bitwise_xor(image,key)
     return de_img
 
@@ -57,6 +58,11 @@ def display_images():
     display_image_from_array(encrypt_img_snp,"encrypted SNP Image")
     display_image_from_array(decrypt_img_snp,"decrypted SNP Image")
 
-#display_images()
+# display_images()
+diff = pixel_diff.pixel_difference(pixel_values,decrypt_img_snp)
+pixel_diff.display_image_from_array(diff,'Difference Image')
 
+psnr_value = psnr.calculate_psnr(pixel_values,decrypt_img_snp)
+print (psnr_value)
+# print(f"PSNR: {psnr_value:.2f} dB")
 cv2.waitKey(0)
