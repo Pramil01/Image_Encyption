@@ -7,6 +7,7 @@ def logistic_map(x,r):
         sub_array[i] = int(x * 255)
     return sub_array
 
+
 def inverse(arr):
     temp = np.zeros(len(arr),dtype=int)
     for i in arr:

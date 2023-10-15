@@ -8,6 +8,7 @@ def calculate_psnr(image1, image2):
 
     # Calculate the mean squared error (MSE)
     mse = np.mean((image1 - image2) ** 2)
+    print(mse)
 
     # If MSE is close to zero, return a very high PSNR value (infinite)
     if mse == 0:

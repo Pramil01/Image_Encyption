@@ -7,7 +7,7 @@ def pixel_difference(original_img,decrypted_img):
     # Check if the images have the same dimensions
     if original_img.shape != decrypted_img.shape:
         raise ValueError("Images must have the same dimensions")
-    normalized_image = cv2.normalize(original_img, None, 0, 255, cv2.NORM_MINMAX)
+
     # Compute the absolute pixel-wise difference
     difference = cv2.absdiff(original_img, decrypted_img)
     return difference
