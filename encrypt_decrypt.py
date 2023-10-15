@@ -111,7 +111,7 @@ def plot_noise_vs_pixel_diff(en_image,original_image):
     plt.figure()
     plt.title('Gaussian Noise vs Pixel Difference between original and decypted image')
     plt.xlabel('Standard Deviation')
-    plt.ylabel('Pixel Difference')
+    plt.ylabel('pecentage of Number of different pixels(%)')
     plt.plot(std_array,y,"x") 
     plt.show()
 
