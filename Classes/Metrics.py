@@ -4,7 +4,7 @@ import numpy as np
 import skimage
 import matplotlib.pyplot as plt
 from Differential_parameter import NPCR, UACI, modified_img, encrypted_image
-from openpyxl import Workbook
+import openpyxl
 import pandas as pd
 # Define the file path for the Excel file
 file_path = "Metrics val.xlsx"
@@ -17,13 +17,9 @@ df = pd.DataFrame(data)
 
 # Set column names
 df.columns = ["PSNR","MSE","SSIM","ENTROPY","CORRELATION"]
-# df.loc['Clock'] =0.0
-# df.at['Aerial','MSE']=10
-# Set row names (index)
-# df.index = ['Aerial']
 
 
-def run_tests(img1, img2,filename):
+def run_tests(img1, img2, filename):
     PSNR = cv2.PSNR(img1, img2)
     df.at[filename, 'PSNR'] = PSNR
     print("PSNR:", PSNR)
@@ -66,6 +62,7 @@ def run_tests(img1, img2,filename):
         va.append(c)
 
     hv = np.sum(va) / (255 * 255)
+    df.at[filename, 'HISTOGRAM_VARIANCE'] = hv
 
     print("Histogram variance:", hv)
 
@@ -75,11 +72,16 @@ def run_tests(img1, img2,filename):
 def diff_parameter(encrypt_img1, encrypt_img2):
     # NCPR parameter (Differential Analysis)
     npcr_obj = NPCR()
-    print("NPCR : " + str(npcr_obj.npcr(encrypt_img1, encrypt_img2)))
+    a = npcr_obj.npcr(encrypt_img1, encrypt_img2)
+    df.at[filename, 'NPCR'] = a
+
+    print("NPCR : " + str(a))
 
     # UACI paramter (Differential Analysis)
     uaci_obj = UACI()
-    print("UACI : " + str(uaci_obj.uaci(encrypt_img1, encrypt_img2)))
+    b = uaci_obj.uaci(encrypt_img1, encrypt_img2)
+    df.at[filename, 'UACI'] = b
+    print("UACI : " + str(b))
 
 
 def histogram(image1, image2):
