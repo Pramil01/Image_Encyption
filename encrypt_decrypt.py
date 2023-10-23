@@ -9,18 +9,25 @@ import pixel_diff
 import psnr_paramter
 import npcr_parameter
 import uaci_parameter
+import hashlib
  
 # Load the grayscale image
-image = cv2.imread('Lena_128.jpg', cv2.IMREAD_GRAYSCALE)
+image = cv2.imread('test_Images/5.1.12.tiff', cv2.IMREAD_GRAYSCALE).astype('int32')
 img_size = len(image)
 # Normalize pixel values to the range 0-255
 normalized_image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX).astype('int32')
 #image with single pixel value different
-normalized_image1 = normalized_image
-normalized_image1[10][15] = normalized_image1[10][15]+5
+# normalized_image1 = normalized_image
+# normalized_image1[10][15] = normalized_image1[10][15]+5
 
 # Convert to a NumPy arrayv
 # pixel_values = np.array(normalized_image, dtype=np.uint8)
+
+filename = "C:/Users/Hp/PycharmProjects/Image_Encyption2/Classes/Images/test_images/5.1.13.tiff"
+with open(filename,"rb") as f:
+    bytes = f.read() # read entire file as bytes
+    readable_hash = hashlib.sha256(bytes).hexdigest();
+    print(readable_hash)
 
 
 def encrypt_snp(image,x,y,N):
@@ -51,7 +58,7 @@ encrypt_img_snp = encrypt_snp(normalized_image,0.001,0.2,5)
 now_end = datetime.now()
 print(now_end - now_start)
 
-encrypt_img_snp1 = encrypt_snp(normalized_image1,0.001,0.2,5)
+encrypt_img_snp1 = encrypt_snp(normalized_image,0.001,0.2,5)
 decrypt_img_snp = decrypt_snp(encrypt_img_snp,0.001,0.2,5)
 
 def display_images():
@@ -115,7 +122,10 @@ def plot_noise_vs_pixel_diff(en_image,original_image):
     plt.plot(std_array,y,"x") 
     plt.show()
 
-plot_noise_vs_pixel_diff(encrypt_img_snp,image)
+# plot_noise_vs_pixel_diff(encrypt_img_snp,image)
+normalized_image2 = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX).astype('int32')
 
+PSNR = cv2.PSNR(normalized_image2,decrypt_img_snp)
+print("PSNR:", PSNR)
 #display_stats()
 cv2.waitKey(0)

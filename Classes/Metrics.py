@@ -4,25 +4,47 @@ import numpy as np
 import skimage
 import matplotlib.pyplot as plt
 from Differential_parameter import NPCR, UACI, modified_img, encrypted_image
+from openpyxl import Workbook
+import pandas as pd
+# Define the file path for the Excel file
+file_path = "Metrics val.xlsx"
+
+# Create a DataFrame filled with 0.0 values
+data = np.zeros((0, 5))
+
+# Create a DataFrame from the data array
+df = pd.DataFrame(data)
+
+# Set column names
+df.columns = ["PSNR","MSE","SSIM","ENTROPY","CORRELATION"]
+# df.loc['Clock'] =0.0
+# df.at['Aerial','MSE']=10
+# Set row names (index)
+# df.index = ['Aerial']
 
 
-def run_tests(img1, img2):
+def run_tests(img1, img2,filename):
     PSNR = cv2.PSNR(img1, img2)
+    df.at[filename, 'PSNR'] = PSNR
     print("PSNR:", PSNR)
 
     MSE = np.square(np.subtract(img1, img2)).mean()
+    df.at[filename, 'MSE'] = MSE
     print("MSE:", MSE)
 
     (SSIM, diff) = skimage.metrics.structural_similarity(img1, img2, full=True)
+    df.at[filename, 'SSIM'] = SSIM
     print("SSIM:", SSIM)
 
     entropy1 = skimage.measure.shannon_entropy(img1)
     entropy2 = skimage.measure.shannon_entropy(img2)
     # print("Entropy1:", entropy1)
+    df.at[filename, 'ENTROPY'] = entropy2
     print("Entropy2:", entropy2)
 
     # Correlation Coefficient
     CC = np.corrcoef(img1.flatten(), img2.flatten())
+    df.at[filename, 'CORRELATION'] = CC[0][1]
     print("Correlation coefficient:", CC)
 
     # Histogram variance analysis for an image
@@ -92,9 +114,10 @@ for filename in os.listdir(folder_path1):
     image1 = cv2.imread(image_path1, cv2.IMREAD_GRAYSCALE)
     image_path2 = os.path.join(folder_path2, filename)
     image2 = cv2.imread(image_path2, cv2.IMREAD_GRAYSCALE)
-    run_tests(image1, image2)
-    encrypt1, encrypt2 = encrypted_image(image1,modified_img(image1))
+    run_tests(image1, image2,filename)
+    encrypt1, encrypt2 = encrypted_image(image1,modified_img(image1),b"Password")
     diff_parameter(encrypt1,encrypt2)
     print("\n------------------------------------------------------------------------------------------------------\n")
 
 
+df.to_excel(file_path, index=True)

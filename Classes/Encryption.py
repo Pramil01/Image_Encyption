@@ -1,13 +1,34 @@
 import numpy as np
 import snp_en
+import hashlib
+import struct
+
+
+def generate_henon_parameters(secret_key):
+    hash_obj = hashlib.sha256(secret_key)
+    hash_bytes = hash_obj.digest()[:16]
+
+    # Split the hash into four 32-bit integers (x, y, a, b)
+    x, y, a, b = struct.unpack('>IIII', hash_bytes)
+
+    # Map x and y to the desired range (e.g., between -1 and 1)
+    x = -1 + (x / 0xFFFFFFFF) * 2
+    y = -1 + (y / 0xFFFFFFFF) * 2
+
+    # Map a and b to the desired range (e.g., between 1 and 2)
+    a = 1 + (a / 0xFFFFFFFF)
+    b = 1 + (b / 0xFFFFFFFF)
+    return x,y,a,b
+
 
 class Encryption:
 
+    # m= hashlib.sha256()
     def __init__(self) :
         pass
     
     # A Henon map of size n
-    def Henon_Map(self,x,y,n,a=1.4,b=0.3):
+    def Henon_Map(self,x,y,n,a,b):
         x_list = np.zeros(n)
         y_list = np.zeros(n)
         for i in range(n):
@@ -25,15 +46,15 @@ class Encryption:
                 mask[i][j] = int(x_list[i]) ^ int(y_list[j])
         return mask 
 
-    def get_mask(self,x,y,img_len):
-        x_list,y_list = self.Henon_Map(x,y,img_len)
+    def get_mask(self,x,y,img_len,a,b):
+        x_list,y_list = self.Henon_Map(x,y,img_len,a,b)
         mask =  self.create_mask(x_list,y_list,img_len)
         return mask
     
-    def encrypt(self,image,x,y,N):
+    def encrypt(self,image,x,y,N,a,b):
         img_size = len(image)
-        key = self.get_mask(x,y,img_size)
+        key = self.get_mask(x,y,img_size,a,b)
         snp_en.snp_encryption(image,N)
         en_img = np.bitwise_xor(image,key)
         return en_img
-    
+

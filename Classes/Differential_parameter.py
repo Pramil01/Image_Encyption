@@ -1,15 +1,17 @@
 import numpy as np
 import random
-from Encryption import Encryption
+import Encryption
 
-def encrypted_image(img1,img2):
-    en_obj = Encryption()
-    en_img1 = en_obj.encrypt(img1, 0.001, 0.3, 2)
-    en_img2 = en_obj.encrypt(img2, 0.001, 0.3, 2)
+def encrypted_image(img1,img2,secret_key):
+    x, y, a, b = Encryption.generate_henon_parameters(secret_key)
+
+    en_obj = Encryption.Encryption()
+    en_img1 = en_obj.encrypt(img1, x,y, 2,a,b)
+    en_img2 = en_obj.encrypt(img2,  x,y, 2,a,b)
     return en_img1,en_img2
 def modified_img(img):
-    i = random.randint(0,len(img))
-    j = random.randint(0,len(img[0]))
+    i = random.randint(0,len(img)-1)
+    j = random.randint(0,len(img[0])-1)
     img[i][j] += random.randint(0,255)
     return img
 

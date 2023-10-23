@@ -10,10 +10,8 @@ def sumofpixelval (height, width, img1, img2):
         for x in range(0, width):
             if img1[x,y] == img2[x,y]:
                 matrix[x,y]=0 #pixel values are same
-
             else:
                 matrix[x,y]=1 #pixel values are different
-
     psum=0
 
     for y in range(0, height):
